@@ -1,0 +1,1 @@
+/home/master/Rust project/Rust-Professional/exercises/easy/algorithm2.rs

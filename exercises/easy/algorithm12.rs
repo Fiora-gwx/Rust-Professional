@@ -12,8 +12,31 @@
 use std::fmt::{self, Display, Formatter};
 
 pub fn is_palindrome(s: String) -> bool {
-    // TODO: Implement the logic to check if the string is a palindrome
-    false // Placeholder return value
+    let chars: Vec<char> = s
+        .to_lowercase()           // 转换为小写
+        .chars()                  // 转换为字符迭代器
+        .filter(|c| c.is_ascii_alphabetic())  // 只保留ASCII字母
+        .collect();              // 收集到vector
+
+    // 2. 使用双指针判断是否为回文
+    let len = chars.len();
+    if len == 0 {
+        return true;  // 空字符串视为回文
+    }
+
+    let mut left = 0;
+    let mut right = len - 1;
+
+    // 从两端向中间移动比较字符
+    while left < right {
+        if chars[left] != chars[right] {
+            return false;  // 如果对应位置字符不相等，不是回文
+        }
+        left += 1;
+        right -= 1;
+    }
+
+    true
 }
 
 #[cfg(test)]

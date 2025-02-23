@@ -7,6 +7,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 #[derive(Debug, Clone)]
+
 pub struct NodeNotInGraph;
 impl fmt::Display for NodeNotInGraph {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -29,7 +30,22 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (from, to, weight) = edge;
+        // 确保两个节点都存在于图中
+        self.add_node(from);
+        self.add_node(to);
+
+        // 在 from 节点的邻接表中添加到 to 节点的边
+        self.adjacency_table_mutable()
+          .entry(from.to_string())
+          .or_insert(Vec::new())
+          .push((to.to_string(), weight));
+
+        // 在 to 节点的邻接表中添加到 from 节点的边
+        self.adjacency_table_mutable()
+          .entry(to.to_string())
+          .or_insert(Vec::new())
+          .push((from.to_string(), weight));
     }
 }
 pub trait Graph {
@@ -37,11 +53,29 @@ pub trait Graph {
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>>;
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
-        //TODO
-		true
+        if self.contains(node) {
+            return false;
+        }
+        self.adjacency_table_mutable().insert(node.to_string(), Vec::new());
+        true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (from, to, weight) = edge;
+        // 确保两个节点都存在于图中
+        self.add_node(from);
+        self.add_node(to);
+
+        // 在 from 节点的邻接表中添加到 to 节点的边
+        self.adjacency_table_mutable()
+          .entry(from.to_string())
+          .or_insert(Vec::new())
+          .push((to.to_string(), weight));
+
+        // 在 to 节点的邻接表中添加到 from 节点的边
+        self.adjacency_table_mutable()
+          .entry(to.to_string())
+          .or_insert(Vec::new())
+          .push((from.to_string(), weight));
     }
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()

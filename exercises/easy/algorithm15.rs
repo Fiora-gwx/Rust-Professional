@@ -12,8 +12,27 @@
 use std::fmt::{self, Display, Formatter};
 
 pub fn longest_substring_without_repeating_chars(s: String) -> i32 {
-    // TODO: Implement the logic to find the longest substring without repeating characters
-    0 // Placeholder return value
+    let mut l=0;
+    let mut r=0;
+    let mut a = vec![0;30];
+    let mut max_len = 0;
+    while l < s.len() && r < s.len() {
+        let c = s.chars().nth(r).unwrap() as usize - 'a' as usize;
+        while r<s.len()
+        {
+            let cc = s.chars().nth(r).unwrap() as usize - 'a' as usize;
+            if a[cc] == 0 {
+                a[cc] = 1;
+                r += 1;
+            } else {
+                break;
+            }
+        }
+        max_len = max_len.max(r-l);
+        a[c]-=1;
+        l+=1;
+    }
+    max_len as i32
 }
 
 #[cfg(test)]
@@ -35,7 +54,6 @@ mod tests {
         println!("Length of longest substring: {}", result);
         assert_eq!(result, 1);  // "b"
     }
-
     #[test]
     fn test_longest_substring_3() {
         let s = "pwwkew".to_string();

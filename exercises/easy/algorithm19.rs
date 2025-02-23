@@ -12,8 +12,60 @@
 use std::fmt::{self, Display, Formatter};
 
 pub fn fib(n: i32) -> i32 {
-    // TODO: Implement the logic to calculate the nth Fibonacci number using matrix exponentiation
-    0 // Placeholder return value
+    // Handle negative input
+    if n < 0 {
+        return 0;
+    }
+    
+    // Handle base cases
+    if n == 0 {
+        return 0;
+    }
+    if n == 1 {
+        return 1;
+    }
+    
+    // Matrix multiplication helper function
+    fn multiply_matrices(a: [[i32; 2]; 2], b: [[i32; 2]; 2]) -> [[i32; 2]; 2] {
+        [
+            [
+                a[0][0] * b[0][0] + a[0][1] * b[1][0],
+                a[0][0] * b[0][1] + a[0][1] * b[1][1]
+            ],
+            [
+                a[1][0] * b[0][0] + a[1][1] * b[1][0],
+                a[1][0] * b[0][1] + a[1][1] * b[1][1]
+            ]
+        ]
+    }
+    
+    // Matrix power using divide and conquer
+    fn matrix_power(matrix: [[i32; 2]; 2], power: i32) -> [[i32; 2]; 2] {
+        if power == 0 {
+            return [[1, 0], [0, 1]];  // Identity matrix
+        }
+        if power == 1 {
+            return matrix;
+        }
+        
+        let half = matrix_power(matrix, power / 2);
+        let result = multiply_matrices(half, half);
+        
+        if power % 2 == 0 {
+            result
+        } else {
+            multiply_matrices(result, matrix)
+        }
+    }
+    
+    // The base matrix for Fibonacci
+    let base_matrix = [[1, 1], [1, 0]];
+    
+    // Calculate power
+    let result_matrix = matrix_power(base_matrix, n - 1);
+    
+    // The nth Fibonacci number is result_matrix[0][0]
+    result_matrix[0][0]
 }
 
 #[cfg(test)]

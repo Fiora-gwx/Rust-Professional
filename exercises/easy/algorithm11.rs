@@ -14,8 +14,16 @@
 use std::fmt::{self, Display, Formatter};
 
 pub fn find_missing_number(nums: Vec<i32>) -> i32 {
-    // TODO: Implement the logic to find the missing number
-    0 // Placeholder return value
+    let mut v=vec![0;nums.len()+2];
+    for i in 0..nums.len(){
+        v[nums[i] as usize]=1;
+    }
+    for i in 1..v.len(){
+        if v[i]==0{
+            return i as i32;
+        }
+    }
+    0
 }
 
 #[cfg(test)]

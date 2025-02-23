@@ -14,8 +14,46 @@
 use std::fmt::{self, Display, Formatter};
 
 pub fn are_anagrams(s1: String, s2: String) -> bool {
-    // TODO: Implement the logic to check if two strings are anagrams
-    false // Placeholder return value
+    let chars1: Vec<char> = s1
+        .to_lowercase()
+        .chars()
+        .filter(|c| c.is_ascii_alphabetic())
+        .collect();
+    
+    let chars2: Vec<char> = s2
+        .to_lowercase()
+        .chars()
+        .filter(|c| c.is_ascii_alphabetic())
+        .collect();
+    
+    // 2. 长度检查
+    if chars1.len() != chars2.len() {
+        return false;  // 长度不同，一定不是变位词
+    }
+    
+    // 3. 统计字母出现次数
+    // 使用长度26的数组记录每个字母出现的次数
+    let mut char_count = [0i32; 26];
+    
+    // 遍历第一个字符串，累加字符出现次数
+    for c in chars1 {
+        let index = (c as u8 - b'a') as usize;
+        char_count[index] += 1;
+    }
+    
+    // 遍历第二个字符串，减少字符出现次数
+    for c in chars2 {
+        let index = (c as u8 - b'a') as usize;
+        char_count[index] -= 1;
+        
+        // 如果某个字母出现次数小于0，说明不是变位词
+        if char_count[index] < 0 {
+            return false;
+        }
+    }
+    
+
+    char_count.iter().all(|&count| count == 0)
 }
 
 #[cfg(test)]
